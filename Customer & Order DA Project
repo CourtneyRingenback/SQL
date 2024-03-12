@@ -45,6 +45,12 @@ SELECT COUNT(DISTINCT acctnum),ROUND(AVG(Quantity*Price),2)AS AVG_amount_spent
 FROM BIT_DB.FebSales
 LEFT JOIN BIT_DB.customers
 ON customers.order_id=FebSales.orderID
+
+#8 List all the products sold in Los Angeles in February, and include how many of each were sold.
+SELECT DISTINCT Product, SUM(Quantity)
+FROM BIT_DB.FebSales
+WHERE location like '%Los Angeles%'
+GROUP BY Product;
 WHERE quantity>2
 AND length(orderid) = 6
 AND orderid <> 'Order ID';
