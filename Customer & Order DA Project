@@ -1,26 +1,19 @@
-SELECT OrderID, Product, Quantity
-FROM BIT_DB.JanSales
-WHERE length(orderID) = 6
-AND orderID <> 'Order ID';
+#In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data.
 
-SELECT COUNT(Quantity)
-FROM BIT_DB.JanSales
-WHERE length(orderID) = 6
-AND orderID <> 'Order ID';
-
+#1. How many orders were placed in January?
 SELECT COUNT(orderid)
 FROM BIT_DB.JanSales
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID';
 
+#2. How many of those orders were for an iPhone?
 SELECT Product, COUNT(orderid) AS Total
 FROM BIT_DB.JanSales
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID'
 AND Product="iPhone";
 
---Select the customer account numbers for all the orders that were placed in February. 
-
+#3. Select the customer account numbers for all the orders that were placed in February. 
 SELECT DISTINCT BIT_DB.customers.acctnum
 FROM BIT_DB.customers
 INNER JOIN BIT_DB.FebSales
@@ -28,33 +21,26 @@ ON BIT_DB.customers.order_id=BIT_DB.FebSales.orderID
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID';
 
---Which product was the cheapest one sold in January, and what was the price?
-
+#4. Which product was the cheapest one sold in January, and what was the price?
 SELECT DISTINCT MIN(price) AS Price, Product
 FROM BIT_DB.JanSales
 GROUP BY Price 
 ORDER BY Price ASC LIMIT 1;
 
---What is the total revenue for each product sold in January?
---(Revenue can be calculated using the number of products sold and the price of the products).
-
+#5 What is the total revenue for each product sold in January? (Revenue can be calculated using the number of products sold and the price of the products).
 SELECT Product, ROUND(SUM(Quantity*Price),2)AS TotalRevenue
 FROM BIT_DB.JanSales
 WHERE length(orderid) = 6
 AND orderid <> 'Order ID'
 GROUP BY Product;
 
---Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, 
---how many of each were sold, and what was the total revenue?
-
+#6 Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
 SELECT Product, quanity, SUM(quantity*price)AS TotalRevenue
 FROM BIT_DB.FebSales
 WHERE location="548 Lincoln St, Seattle, WA 98101"
 GROUP BY product;
 
---How many customers ordered more than 2 products at a time in February, 
---and what was the average amount spent for those customers?
-
+#7How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers?
 SELECT COUNT(DISTINCT acctnum),ROUND(AVG(Quantity*Price),2)AS AVG_amount_spent
 FROM BIT_DB.FebSales
 LEFT JOIN BIT_DB.customers
